@@ -196,5 +196,9 @@ instead.
   auto-updaters are off; update them with `nix flake update` + switch
   (nixpkgs usually trails upstream by a day or two). `claude-code` is unfree
   and is allowed by name in `darwin.nix`.
+- `NIX_SSL_CERT_FILE` is also exported to GUI apps via launchd
+  (`launchd.user.envVariables` in `darwin.nix`), so agents launched from GUI
+  apps such as T3 Code can verify TLS. Log out and back in (or restart the
+  app) after the first switch.
 - Their settings in `~/.claude` and `~/.codex` are not managed here because
   the tools write to them (e.g. project trust, permissions).
