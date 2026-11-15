@@ -1,0 +1,5 @@
+# statix configuration
+# Repeating `programs.x = ...` / `home.x = ...` is idiomatic in home-manager configs.
+disabled = [
+  "repeated_keys"
+]
