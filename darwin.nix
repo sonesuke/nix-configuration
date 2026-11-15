@@ -1,9 +1,11 @@
-{ username, ... }:
+{ lib, username, ... }:
 {
   # Determinate Nix manages the Nix installation and daemon itself.
   nix.enable = false;
 
   nixpkgs.hostPlatform = "aarch64-darwin";
+  # Unfree packages are allowed one by one (home-manager shares these pkgs).
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [ "claude-code" ];
 
   system.primaryUser = username;
   users.users.${username}.home = "/Users/${username}";

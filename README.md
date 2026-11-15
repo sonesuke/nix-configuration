@@ -9,11 +9,11 @@ Declarative setup for my Mac (`Air`, Apple Silicon) using
 
 | Layer | Managed by | Contents |
 | --- | --- | --- |
-| CLI tools, shell, dotfiles | home-manager (`home.nix`, `docker.nix`, `vim.nix`) | git, gh, ripgrep, watch, awscli2, granted, docker CLI, colima, lima, vim, zsh |
+| CLI tools, shell, dotfiles | home-manager (`home.nix`, `docker.nix`, `vim.nix`) | git, gh, ripgrep, watch, awscli2, granted, Claude Code, Codex, docker CLI, colima, lima, vim, zsh |
 | System settings | nix-darwin (`darwin.nix`) | `/etc/zshrc` etc., Homebrew bundle |
 | GUI apps | Homebrew casks, declared in `darwin.nix` | espanso, zed |
 | Nix itself | Determinate Nix (`nix.enable = false`) | nix daemon, `/etc/nix/nix.conf` |
-| Not managed by Nix | — | Claude Code (native installer in `~/.local/bin`), fonts, App Store apps |
+| Not managed by Nix | — | Claude Code / Codex settings (`~/.claude`, `~/.codex`), fonts, App Store apps |
 | Secrets / credentials | — (never put them in this repo) | `~/.zshrc.local`, `~/.aws`, `~/.gnupg`, `~/.config/gcloud`, `~/.config/gh/hosts.yml` |
 
 ## Layout
@@ -126,7 +126,8 @@ Any other repo can use the same mechanism by adding an `.envrc` containing
 ## Shell
 
 - zsh is configured by home-manager (`programs.zsh`).
-- `~/.local/bin` is on `PATH` (Claude Code).
+- `~/.local/bin` is on `PATH` (for tools installed by their own install
+  scripts).
 - `~/.zshrc.local` is sourced if it exists. Put API keys and other
   machine-local settings there; it is not managed by Nix and must never be
   committed.
@@ -191,6 +192,9 @@ instead.
 
 - `nix.enable = false` because Determinate Nix manages the Nix installation.
   Nix settings go in `/etc/nix/nix.custom.conf`, not in this repo.
-- Claude Code is kept on its native installer so it can auto-update. Its
-  settings in `~/.claude` are not managed here because Claude Code writes to
-  them.
+- Claude Code and Codex come from nixpkgs (`home.packages`). Their built-in
+  auto-updaters are off; update them with `nix flake update` + switch
+  (nixpkgs usually trails upstream by a day or two). `claude-code` is unfree
+  and is allowed by name in `darwin.nix`.
+- Their settings in `~/.claude` and `~/.codex` are not managed here because
+  the tools write to them (e.g. project trust, permissions).
