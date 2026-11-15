@@ -20,19 +20,12 @@ jobs:
     # Apple Silicon runner, same platform as the real machine (aarch64-darwin).
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - uses: DeterminateSystems/determinate-nix-action@v3
 
-      - name: Format
-        run: |
-          nix fmt
-          git diff --exit-code
-
       - name: Lint
-        run: |
-          nix develop --command statix check .
-          nix develop --command deadnix --fail .
+        run: nix develop -c scripts/lint.sh
 
       # Build (not activate) the whole system, including home-manager.
       - name: Build
