@@ -25,6 +25,7 @@ home.nix     # user packages, zsh, git, gh, granted
 docker.nix   # docker CLI + plugins, Colima (docker engine), Lima (generic VMs)
 vim.nix      # vim with a small set of plugins; set as $EDITOR
 statix.toml  # linter config
+scripts/     # fmt.sh (format) and lint.sh (format check + linters), also used by CI
 .envrc       # `use flake` -> direnv loads the dev shell
 .github/workflows/ci.yml  # CI: format check, lint, build on macOS (arm64)
 ```
@@ -105,18 +106,20 @@ nix shell nixpkgs#coreutils
 
 ## Editing this repo
 
-A dev shell with `nixfmt`, `statix`, `deadnix` and `nil` (language server) is
+A dev shell with `nixfmt`, `statix`, `deadnix`, `actionlint` and `nil`
+(language server) is
 defined in `flake.nix`. With direnv + nix-direnv (configured in `home.nix`), it
 is loaded automatically when you `cd` into the repo; run `direnv allow` once.
 Without direnv, use `nix develop`.
 
 ```sh
-nix fmt            # format all .nix files (nixfmt-tree)
-statix check .     # lint; `repeated_keys` is disabled in statix.toml
-deadnix --fail .   # find unused bindings
+scripts/fmt.sh     # format all .nix files (nix fmt / nixfmt-tree)
+scripts/lint.sh    # nixfmt --check, statix, deadnix, actionlint
 ```
 
-CI (`.github/workflows/ci.yml`) runs the same format check and lints, then
+`repeated_keys` is disabled in `statix.toml`.
+
+CI (`.github/workflows/ci.yml`) runs `scripts/lint.sh`, then
 builds `darwinConfigurations.Air.system` on an Apple Silicon macOS runner
 (build only, nothing is activated).
 

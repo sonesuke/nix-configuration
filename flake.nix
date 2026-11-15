@@ -55,6 +55,7 @@
             nixfmt # formatter
             statix # linter (anti-patterns)
             deadnix # linter (unused bindings)
+            actionlint # linter (GitHub Actions workflows)
             nil # language server
           ];
         };
