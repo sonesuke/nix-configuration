@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    # Must match the required status check in the main-protection ruleset.
+    name: Build & Verify
+    # Apple Silicon runner, same platform as the real machine (aarch64-darwin).
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: DeterminateSystems/determinate-nix-action@v3
+
+      - name: Format
+        run: |
+          nix fmt
+          git diff --exit-code
+
+      - name: Lint
+        run: |
+          nix develop --command statix check .
+          nix develop --command deadnix --fail .
+
+      # Build (not activate) the whole system, including home-manager.
+      - name: Build
+        run: nix build .#darwinConfigurations.Air.system --print-build-logs
