@@ -13,9 +13,14 @@
     ripgrep
     watch
     awscli2
+    # Coding agents. Updated with `nix flake update`; their own auto-updaters
+    # are disabled. Settings in ~/.claude and ~/.codex are left unmanaged
+    # because the tools write to them.
+    claude-code
+    codex
   ];
 
-  # Claude Code (native installer) lives here.
+  # Tools installed outside Nix (e.g. by their own install scripts) live here.
   home.sessionPath = [ "$HOME/.local/bin" ];
 
   programs.zsh = {
