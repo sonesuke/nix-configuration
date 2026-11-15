@@ -14,10 +14,11 @@
     watch
     awscli2
     # Coding agents. Updated with `nix flake update`; their own auto-updaters
-    # are disabled. Settings in ~/.claude and ~/.codex are left unmanaged
-    # because the tools write to them.
+    # are disabled. Settings in ~/.claude, ~/.codex and ~/.pi are left
+    # unmanaged because the tools write to them.
     claude-code
     codex
+    pi-coding-agent
   ];
 
   # Tools installed outside Nix (e.g. by their own install scripts) live here.

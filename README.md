@@ -9,11 +9,11 @@ Declarative setup for my Mac (`Air`, Apple Silicon) using
 
 | Layer | Managed by | Contents |
 | --- | --- | --- |
-| CLI tools, shell, dotfiles | home-manager (`home.nix`, `docker.nix`, `vim.nix`) | git, gh, ripgrep, watch, awscli2, granted, Claude Code, Codex, docker CLI, colima, lima, vim, zsh |
+| CLI tools, shell, dotfiles | home-manager (`home.nix`, `docker.nix`, `vim.nix`) | git, gh, ripgrep, watch, awscli2, granted, Claude Code, Codex, Pi, docker CLI, colima, lima, vim, zsh |
 | System settings | nix-darwin (`darwin.nix`) | `/etc/zshrc` etc., Homebrew bundle |
 | GUI apps | Homebrew casks, declared in `darwin.nix` | espanso, zed |
 | Nix itself | Determinate Nix (`nix.enable = false`) | nix daemon, `/etc/nix/nix.conf` |
-| Not managed by Nix | — | Claude Code / Codex settings (`~/.claude`, `~/.codex`), fonts, App Store apps |
+| Not managed by Nix | — | Claude Code / Codex / Pi settings (`~/.claude`, `~/.codex`, `~/.pi`), fonts, App Store apps |
 | Secrets / credentials | — (never put them in this repo) | `~/.zshrc.local`, `~/.aws`, `~/.gnupg`, `~/.config/gcloud`, `~/.config/gh/hosts.yml` |
 
 ## Layout
@@ -195,13 +195,13 @@ instead.
 
 - `nix.enable = false` because Determinate Nix manages the Nix installation.
   Nix settings go in `/etc/nix/nix.custom.conf`, not in this repo.
-- Claude Code and Codex come from nixpkgs (`home.packages`). Their built-in
-  auto-updaters are off; update them with `nix flake update` + switch
+- Claude Code, Codex and Pi (`pi-coding-agent`) come from nixpkgs
+  (`home.packages`). Their built-in auto-updaters / version checks are off; update them with `nix flake update` + switch
   (nixpkgs usually trails upstream by a day or two). `claude-code` is unfree
   and is allowed by name in `darwin.nix`.
 - `NIX_SSL_CERT_FILE` is also exported to GUI apps via launchd
   (`launchd.user.envVariables` in `darwin.nix`), so agents launched from GUI
   apps such as T3 Code can verify TLS. Log out and back in (or restart the
   app) after the first switch.
-- Their settings in `~/.claude` and `~/.codex` are not managed here because
+- Their settings in `~/.claude`, `~/.codex` and `~/.pi` are not managed here because
   the tools write to them (e.g. project trust, permissions).
