@@ -2,6 +2,7 @@
 {
   imports = [
     ./docker.nix
+    ./icloud-exclude.nix
     ./vim.nix
   ];
 

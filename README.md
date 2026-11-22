@@ -9,7 +9,7 @@ Declarative setup for my Mac (`Air`, Apple Silicon) using
 
 | Layer | Managed by | Contents |
 | --- | --- | --- |
-| CLI tools, shell, dotfiles | home-manager (`home.nix`, `docker.nix`, `vim.nix`) | git, gh, ripgrep, watch, awscli2, granted, Claude Code, Codex, Pi, docker CLI, colima, lima, vim, zsh |
+| CLI tools, shell, dotfiles | home-manager (`home.nix`, `docker.nix`, `vim.nix`, `icloud-exclude.nix`) | git, gh, ripgrep, watch, awscli2, granted, Claude Code, Codex, Pi, docker CLI, colima, lima, vim, zsh |
 | System settings | nix-darwin (`darwin.nix`) | `/etc/zshrc` etc., Homebrew bundle |
 | GUI apps | Homebrew casks, declared in `darwin.nix` | espanso, zed |
 | Nix itself | Determinate Nix (`nix.enable = false`) | nix daemon, `/etc/nix/nix.conf` |
@@ -24,6 +24,7 @@ darwin.nix   # system-level config + Homebrew casks
 home.nix     # user packages, zsh, git, gh, granted
 docker.nix   # docker CLI + plugins, Colima (docker engine), Lima (generic VMs)
 vim.nix      # vim with a small set of plugins; set as $EDITOR
+icloud-exclude.nix  # keeps build artifacts out of iCloud Drive (fswatch + xattr)
 statix.toml  # linter config
 scripts/     # fmt.sh (format) and lint.sh (format check + linters), also used by CI
 .envrc       # `use flake` -> direnv loads the dev shell
@@ -190,6 +191,23 @@ not interfere.
 vim-surround, and sets it as `$EDITOR` / `$VISUAL`. The vimrc is built into
 the wrapped `vim` package, so there is no `~/.vimrc`; edit `vim.nix`
 instead.
+
+## iCloud Drive: build artifacts
+
+`icloud-exclude.nix` keeps regenerable folders (`node_modules`, `.build`,
+`.venv`, `.direnv`, `target` next to `Cargo.toml`, ...) under iCloud Drive
+from syncing, by tagging them with the File Provider ignore xattr
+`com.apple.fileprovider.ignore#P` (same mechanism as
+[exclude-icloud-artifacts](https://github.com/amosavian/exclude-icloud-artifacts)).
+Tagged folders stay on this Mac; an already-uploaded copy is removed from
+iCloud (and other devices).
+
+- A LaunchAgent runs a shell script: one sweep at login (`find`), then
+  `fswatch` (FSEvents) tags matching folders as they are created.
+- Folder names and roots are lists in `icloud-exclude.nix`.
+- Tag a tree by hand: `icloud-exclude --sweep <dir>...`
+- Log: `~/Library/Logs/icloud-exclude.log`
+- Re-sync a folder: `xattr -d 'com.apple.fileprovider.ignore#P' <folder>`
 
 ## Notes
 
