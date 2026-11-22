@@ -45,7 +45,7 @@ scripts/     # fmt.sh (format) and lint.sh (format check + linters), also used b
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
    ```
 
-3. Clone this repo to `~/Desktop/nix-configuration`.
+3. Clone this repo anywhere and `cd` into it.
 
 4. Move away the `/etc` files nix-darwin wants to own, then do the first switch:
 
@@ -53,7 +53,7 @@ scripts/     # fmt.sh (format) and lint.sh (format check + linters), also used b
    sudo mv /etc/zshrc   /etc/zshrc.before-nix-darwin
    sudo mv /etc/zprofile /etc/zprofile.before-nix-darwin
    sudo mv /etc/zshenv  /etc/zshenv.before-nix-darwin
-   sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake ~/Desktop/nix-configuration#Air
+   sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake .#Air
    ```
 
    Existing dotfiles that home-manager takes over are renamed with the
@@ -63,10 +63,10 @@ scripts/     # fmt.sh (format) and lint.sh (format check + linters), also used b
 
 ## Daily use
 
-Apply changes after editing any `.nix` file:
+Run these from the repo root. Apply changes after editing any `.nix` file:
 
 ```sh
-sudo darwin-rebuild switch --flake ~/Desktop/nix-configuration
+sudo darwin-rebuild switch --flake .
 ```
 
 The `#Air` suffix can be omitted because it matches the machine's
@@ -75,8 +75,8 @@ The `#Air` suffix can be omitted because it matches the machine's
 Update all inputs (nixpkgs, nix-darwin, home-manager), then switch:
 
 ```sh
-nix flake update --flake ~/Desktop/nix-configuration
-sudo darwin-rebuild switch --flake ~/Desktop/nix-configuration
+nix flake update --flake .
+sudo darwin-rebuild switch --flake .
 ```
 
 Roll back to the previous generation:
