@@ -195,7 +195,7 @@ instead.
 ## iCloud Drive: build artifacts
 
 `icloud-exclude.nix` keeps regenerable folders (`node_modules`, `.build`,
-`.venv`, `.direnv`, `target` next to `Cargo.toml`, ...) under iCloud Drive
+`.venv`, `.lake`, `.direnv`, `target` next to `Cargo.toml`, ...) under iCloud Drive
 from syncing, by tagging them with the File Provider ignore xattr
 `com.apple.fileprovider.ignore#P` (same mechanism as
 [exclude-icloud-artifacts](https://github.com/amosavian/exclude-icloud-artifacts)).

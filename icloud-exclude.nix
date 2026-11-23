@@ -35,6 +35,8 @@ let
     ".tox"
     # Java / Kotlin
     ".gradle"
+    # Lean (Lake build output and fetched packages)
+    ".lake"
     # Misc
     ".direnv"
     ".cache"
